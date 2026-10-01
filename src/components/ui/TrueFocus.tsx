@@ -48,7 +48,7 @@ export const TrueFocus: React.FC<TrueFocusProps> = ({
   return (
     <div 
       ref={containerRef} 
-      onMouseLeave={() => setHoveredIndex(null)}
+      onPointerLeave={() => setHoveredIndex(null)}
       style={{ 
         position: 'relative', 
         display: 'inline-flex', 
@@ -56,7 +56,7 @@ export const TrueFocus: React.FC<TrueFocusProps> = ({
         gap: '8px', 
         justifyContent: 'center',
         padding: '12px',
-        cursor: 'default'
+        cursor: 'pointer'
       }}
     >
       <motion.div
@@ -94,7 +94,7 @@ export const TrueFocus: React.FC<TrueFocusProps> = ({
           <motion.span
             key={index}
             ref={(el) => { wordRefs.current[index] = el; }}
-            onMouseEnter={() => setHoveredIndex(index)}
+            onPointerEnter={() => setHoveredIndex(index)}
             animate={{
               filter: !isAnyHovered || isHovered ? 'blur(0px)' : `blur(${blurAmount}px)`,
               opacity: !isAnyHovered || isHovered ? 1 : 0.6
