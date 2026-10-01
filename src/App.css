@@ -1,0 +1,161 @@
+/* Estilos responsivos y de layout para OficioYa */
+
+.app-root-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main-body {
+  display: flex;
+  flex: 1;
+}
+
+.app-content-area {
+  flex: 1;
+  min-width: 0;
+  padding-bottom: 70px; /* Espacio para BottomNav en móvil */
+}
+
+@media (min-width: 768px) {
+  .app-content-area {
+    padding-bottom: 20px;
+  }
+}
+
+/* Ocultar elementos según resolución */
+@media (max-width: 767px) {
+  .hide-on-mobile {
+    display: none !important;
+  }
+  .desktop-sidebar {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .hide-on-desktop {
+    display: none !important;
+  }
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+}
+
+/* Spinner de verificación JWT */
+.jwt-loading-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.spinner {
+  width: 44px;
+  height: 44px;
+  border: 4px solid var(--color-border);
+  border-top-color: var(--role-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-top: 16px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── CROSSFADE TRANSITIONS ───────────────────────────────────────── */
+.crossfade-wrapper {
+  transition: opacity 0.22s ease-in-out, filter 0.22s ease-in-out;
+  opacity: 1;
+  filter: blur(0);
+  will-change: opacity, filter;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.crossfade-wrapper--hidden {
+  opacity: 0;
+  filter: blur(4px);
+  pointer-events: none;
+}
+
+/* Botones refinados para ProviderHomeView */
+.btn-provider-interest {
+  flex: 1;
+  height: 38px;
+  background-color: rgba(245, 158, 11, 0.08);
+  color: #B45309;
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-provider-interest:hover {
+  background-color: rgba(245, 158, 11, 0.15);
+}
+
+/* Modo oscuro para botón primario (opcional, si hay soporte) */
+html[data-theme="dark"] .btn-provider-interest {
+  background-color: rgba(245, 158, 11, 0.12);
+  color: #FBBF24;
+}
+
+.btn-provider-recommend {
+  height: 38px;
+  background-color: transparent;
+  color: var(--color-text-muted);
+  border: 1px solid rgba(150,150,150,0.2);
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 0 16px;
+  transition: all 0.2s ease;
+}
+
+.btn-provider-recommend:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-main);
+  border-color: rgba(150,150,150,0.4);
+}
+
+/* Seeker Directory Worker Row Interacciones */
+.seeker-worker-row {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.seeker-worker-row:hover {
+  background-color: rgba(150, 150, 150, 0.03);
+}
+.seeker-worker-img {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.seeker-worker-row:hover .seeker-worker-img {
+  transform: scale(1.06);
+}
+.seeker-worker-action {
+  opacity: 0;
+  transform: translateX(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.seeker-worker-row:hover .seeker-worker-action {
+  opacity: 1;
+  transform: translateX(0);
+}
