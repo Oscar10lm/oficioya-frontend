@@ -115,6 +115,7 @@ const MainAppContent: React.FC = () => {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isAdminModalOpen, setIsAdminModalOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [activeChatConvId, setActiveChatConvId] = useState<string | undefined>(undefined);
 
   const triggerPushNotification = (
@@ -281,7 +282,7 @@ const MainAppContent: React.FC = () => {
       }));
     }
     setActiveChatConvId(conv.id);
-    setCurrentTab('mensajes');
+    setIsChatOpen(true);
   };
 
   const handleSendMessage = (conversationId: string, text: string) => {
@@ -420,6 +421,8 @@ const MainAppContent: React.FC = () => {
         currentTab={currentTab}
         onSelectTab={setCurrentTab}
         unreadCount={totalUnreadCount}
+        isChatOpen={isChatOpen}
+        onToggleChat={() => setIsChatOpen(!isChatOpen)}
       />
 
       <div className="app-main-body">
@@ -485,18 +488,23 @@ const MainAppContent: React.FC = () => {
             />
           )}
 
-          {/* ========================================================
-              VISTAS COMPARTIDAS
-              ======================================================== */}
-          {/* Pestaña: Mensajes / Chat */}
-          {currentTab === 'mensajes' && (
-            <ChatView
-              conversations={conversations}
-              messages={messages}
-              initialConversationId={activeChatConvId}
-              onSendMessage={handleSendMessage}
-              workers={workers}
-            />
+          {/* Drawer de Mensajes / Chat (Overlay Sidebar) */}
+          {isChatOpen && (
+            <>
+              <div 
+                className="hide-on-desktop"
+                onClick={() => setIsChatOpen(false)}
+                style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 999, backdropFilter: 'blur(2px)' }}
+              />
+              <ChatView
+                conversations={conversations}
+                messages={messages}
+                initialConversationId={activeChatConvId}
+                onSendMessage={handleSendMessage}
+                workers={workers}
+                onClose={() => setIsChatOpen(false)}
+              />
+            </>
           )}
 
           {/* Pestaña: Perfil */}

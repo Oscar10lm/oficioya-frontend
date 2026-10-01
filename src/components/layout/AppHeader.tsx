@@ -31,6 +31,8 @@ interface AppHeaderProps {
   currentTab: string;
   onSelectTab: (tab: string) => void;
   unreadCount: number;
+  isChatOpen?: boolean;
+  onToggleChat?: () => void;
 }
 
 export const AppHeader: React.FC<AppHeaderProps> = ({
@@ -41,7 +43,9 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
   hasGps,
   currentTab,
   onSelectTab,
-  unreadCount
+  unreadCount,
+  isChatOpen,
+  onToggleChat
 }) => {
   const { user, role, switchRole, logout } = useAuth();
   const { theme, toggleTheme, fontScale, setFontScale } = useTheme();
@@ -113,7 +117,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <TabButton id="inicio_seeker" label="Inicio" icon={Home} current={currentTab} onSelect={onSelectTab} />
               <TabButton id="buscar" label="Buscar profesionales" icon={Search} current={currentTab} onSelect={onSelectTab} />
               <TabButton id="solicitudes" label="Mis solicitudes" icon={FileText} current={currentTab} onSelect={onSelectTab} />
-              <TabButton id="mensajes" label="Mensajes" icon={MessageCircle} current={currentTab} onSelect={onSelectTab} badge={unreadCount} />
+              <TabButton id="mensajes" label="Mensajes" icon={MessageCircle} current={isChatOpen ? 'mensajes' : ''} onSelect={() => onToggleChat && onToggleChat()} badge={unreadCount} />
             </>
           ) : (
             <>
@@ -121,7 +125,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
               <TabButton id="oportunidades" label="Oportunidades" icon={Search} current={currentTab} onSelect={onSelectTab} />
               <TabButton id="clientes" label="Mis clientes" icon={Briefcase} current={currentTab} onSelect={onSelectTab} />
               <TabButton id="alertas" label="Alertas" icon={Bell} current={currentTab} onSelect={onSelectTab} />
-              <TabButton id="mensajes" label="Mensajes" icon={MessageCircle} current={currentTab} onSelect={onSelectTab} badge={unreadCount} />
+              <TabButton id="mensajes" label="Mensajes" icon={MessageCircle} current={isChatOpen ? 'mensajes' : ''} onSelect={() => onToggleChat && onToggleChat()} badge={unreadCount} />
             </>
           )}
         </nav>

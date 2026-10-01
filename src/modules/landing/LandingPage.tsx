@@ -7,6 +7,7 @@ import {
 } from 'lucide-react';
 import './LandingPage.css';
 import { AppFooter } from '../../components/layout/AppFooter';
+import { TrueFocus } from '../../components/ui/TrueFocus';
 
 interface LandingPageProps { onEnterApp: (role?: 'seeker' | 'provider') => void; }
 
@@ -212,14 +213,21 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
           OficioYa
         </h1>
 
-        {/* Eslogan — INTOCABLE */}
-        <p style={{
+        {/* Eslogan */}
+        <div style={{
           fontFamily: 'var(--font-body)', fontSize: 'clamp(1.15rem, 2.5vw, 1.5rem)',
           fontWeight: 400, color: 'rgba(255,255,255,0.7)', marginBottom: '16px',
           maxWidth: '540px', lineHeight: 1.55, letterSpacing: '-0.2px',
         }}>
-          El talento de tu zona a un click de distancia.
-        </p>
+          <TrueFocus
+            sentence="El talento de tu zona a un click de distancia"
+            manualMode={false}
+            blurAmount={3}
+            borderColor="#2F6BFF"
+            animationDuration={0.7}
+            pauseBetweenAnimations={1.8}
+          />
+        </div>
 
         {/* Texto descriptivo — sin recuadro, flotante */}
         <p style={{

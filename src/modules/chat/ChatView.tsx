@@ -17,6 +17,7 @@ interface ChatViewProps {
   initialConversationId?: string;
   onSendMessage: (conversationId: string, text: string) => void;
   workers: Worker[];
+  onClose?: () => void;
 }
 
 const QUICK_REPLIES = [
@@ -32,7 +33,8 @@ export const ChatView: React.FC<ChatViewProps> = ({
   messages,
   initialConversationId,
   onSendMessage,
-  workers
+  workers,
+  onClose
 }) => {
   const { user, role } = useAuth();
   const [activeConvId, setActiveConvId] = useState<string | null>(
@@ -81,34 +83,40 @@ export const ChatView: React.FC<ChatViewProps> = ({
   };
 
   return (
-    <div className="chat-module container" style={{ padding: '20px 0 60px' }}>
-      <div
-        className="card"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'minmax(280px, 340px) 1fr',
-          padding: 0,
-          borderRadius: '24px',
-          overflow: 'hidden',
-          minHeight: '620px',
-          maxHeight: '75vh'
-        }}
-      >
-        {/* Columna Izquierda: Bandeja de Entrada */}
-        <div
-          style={{
-            borderRight: '1px solid var(--color-border)',
-            background: 'var(--color-surface)',
-            display: 'flex',
-            flexDirection: 'column'
-          }}
-        >
-          <div style={{ padding: '16px', borderBottom: '1px solid var(--color-border)' }}>
-            <h3 style={{ fontSize: '1.2rem', marginBottom: '4px' }}>Bandeja de Mensajes</h3>
-            <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
-              {conversations.length} conversaciones activas
-            </span>
-          </div>
+    <div 
+      className="chat-drawer" 
+      style={{ 
+        position: 'fixed',
+        top: 0,
+        right: 0,
+        bottom: 0,
+        width: '100%',
+        maxWidth: '380px',
+        background: 'var(--color-bg)',
+        boxShadow: '-4px 0 24px rgba(0,0,0,0.1)',
+        zIndex: 1000,
+        display: 'flex',
+        flexDirection: 'column',
+        animation: 'slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+      }}
+    >
+      <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+        {/* VISTA 1: Lista de Mensajes (Solo se muestra si no hay un chat activo) */}
+        {!activeConv && (
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--color-surface)' }}>
+            <div style={{ padding: '20px', borderBottom: '1px solid var(--color-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div>
+                <h3 style={{ fontSize: '1.2rem', marginBottom: '4px' }}>Mensajes</h3>
+                <span style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>
+                  {conversations.length} conversaciones activas
+                </span>
+              </div>
+              {onClose && (
+                <button onClick={onClose} style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '8px', color: 'var(--color-text-muted)' }}>
+                  <span style={{ fontSize: '20px', fontWeight: 'bold' }}>×</span>
+                </button>
+              )}
+            </div>
 
           <div style={{ overflowY: 'auto', flex: 1 }}>
             {conversations.length === 0 ? (
@@ -187,31 +195,30 @@ export const ChatView: React.FC<ChatViewProps> = ({
                 );
               })
             )}
+            </div>
           </div>
-        </div>
+        )}
 
-        {/* Columna Derecha: Vista del Chat Activo */}
-        <div style={{ display: 'flex', flexDirection: 'column', background: 'var(--color-bg)' }}>
-          {activeConv ? (
-            <>
-              {/* Header del Chat Activo */}
-              <div
-                style={{
-                  padding: '12px 18px',
-                  background: 'var(--color-surface)',
-                  borderBottom: '1px solid var(--color-border)',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}
-              >
+        {/* VISTA 2: Chat Activo (Solo se muestra si hay un chat activo) */}
+        {activeConv && (
+          <div style={{ display: 'flex', flexDirection: 'column', height: '100%', background: 'var(--color-bg)' }}>
+            {/* Header del Chat Activo */}
+            <div
+              style={{
+                padding: '16px',
+                background: 'var(--color-surface)',
+                borderBottom: '1px solid var(--color-border)',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center'
+              }}
+            >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <button
                     onClick={() => setActiveConvId(null)}
-                    className="hide-on-desktop"
-                    style={{ padding: '4px', color: 'var(--color-text-muted)' }}
+                    style={{ padding: '4px', color: 'var(--color-text-muted)', background: 'transparent', border: 'none', cursor: 'pointer' }}
                   >
-                    <ArrowLeft size={18} />
+                    <ArrowLeft size={20} />
                   </button>
 
                   <div
@@ -416,13 +423,8 @@ export const ChatView: React.FC<ChatViewProps> = ({
                   <Send size={18} />
                 </button>
               </div>
-            </>
-          ) : (
-            <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', color: 'var(--color-text-muted)', textAlign: 'center' }}>
-              Selecciona una conversación a la izquierda para empezar a chatear.
-            </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

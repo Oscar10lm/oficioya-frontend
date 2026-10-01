@@ -406,35 +406,35 @@ export const SeekerDirectory: React.FC<SeekerDirectoryProps> = ({
   return (
     <div className="seeker-directory" style={{ padding: '24px 0 60px' }}>
       <div className="container">
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap' }}>
-          <div style={{ flex: 1, minWidth: '320px', position: 'relative' }}>
+        <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap' }}>
+          <div style={{ flex: 1, minWidth: '280px', position: 'relative' }}>
             <Search
-              size={20}
+              size={18}
               style={{ position: 'absolute', left: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }}
             />
             <input
               type="text"
               className="input-base"
-              placeholder="Buscar oficios, especialistas o problemas..."
+              placeholder="¿Qué necesitas solucionar?"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
-              style={{ paddingLeft: '56px', height: '60px', fontSize: '18px', borderRadius: '30px' }}
+              style={{ paddingLeft: '48px', height: '56px', fontSize: '16px', borderRadius: '28px' }}
             />
             {searchQuery && (
               <button
                 onClick={() => setSearchQuery('')}
-                style={{ position: 'absolute', right: '20px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)' }}
+                style={{ position: 'absolute', right: '16px', top: '50%', transform: 'translateY(-50%)', color: 'var(--color-text-muted)', background: 'transparent', border: 'none', cursor: 'pointer' }}
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             )}
           </div>
 
-          <div style={{ display: 'flex', gap: '12px' }}>
+          <div style={{ display: 'flex', gap: '8px' }}>
             <button
               onClick={() => setShowCatalogModal(true)}
               className="btn btn-secondary"
-              style={{ height: '60px', padding: '0 24px', borderRadius: '30px', fontSize: '15px' }}
+              style={{ height: '56px', padding: '0 20px', borderRadius: '28px', fontSize: '14px' }}
             >
               Oficios
             </button>
@@ -442,7 +442,7 @@ export const SeekerDirectory: React.FC<SeekerDirectoryProps> = ({
             <button
               onClick={() => setShowFilterModal(true)}
               className="btn btn-secondary"
-              style={{ height: '60px', padding: '0 24px', borderRadius: '30px', fontSize: '15px' }}
+              style={{ height: '56px', padding: '0 20px', borderRadius: '28px', fontSize: '14px' }}
             >
               Filtros
               {(selectedZone !== 'Todas las zonas' || maxBudgetRate < 70000 || minRating > 0 || onlyAvailable) && (
@@ -453,9 +453,9 @@ export const SeekerDirectory: React.FC<SeekerDirectoryProps> = ({
             <button
               onClick={() => onOpenSendRequest()}
               className="btn btn-primary"
-              style={{ height: '60px', padding: '0 28px', borderRadius: '30px', fontSize: '15px' }}
+              style={{ height: '56px', padding: '0 24px', borderRadius: '28px', fontSize: '14px' }}
             >
-              Solicitud Abierta
+              Solicitar
             </button>
           </div>
         </div>
@@ -706,12 +706,10 @@ export const SeekerDirectory: React.FC<SeekerDirectoryProps> = ({
             </button>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <div className="seeker-directory-grid">
             {filteredWorkers.map((worker, index) => {
-              const isEven = index % 2 === 0;
               const category = CATEGORIES.find(c => c.id === worker.trade);
               
-              // Formas orgánicas predefinidas para dar sensación natural y no corporativa
               const organicRadii = [
                 '40% 60% 70% 30% / 40% 50% 60% 50%',
                 '60% 40% 30% 70% / 60% 30% 70% 40%',
@@ -720,16 +718,13 @@ export const SeekerDirectory: React.FC<SeekerDirectoryProps> = ({
               ];
               const shapeRadius = organicRadii[index % organicRadii.length];
               const tagRadius = organicRadii[(index + 2) % organicRadii.length];
+              const isEven = index % 2 === 0;
 
               return (
                 <div
                   key={worker.id}
                   onClick={() => onSelectWorker(worker)}
                   className="seeker-worker-row"
-                  style={{
-                    flexDirection: isEven ? 'row' : 'row-reverse',
-                    textAlign: isEven ? 'left' : 'right'
-                  }}
                 >
                   {/* FOTO PROTAGONISTA */}
                   <div style={{ position: 'relative', flexShrink: 0 }}>
@@ -769,17 +764,17 @@ export const SeekerDirectory: React.FC<SeekerDirectoryProps> = ({
                     flex: 1, 
                     display: 'flex', 
                     flexDirection: 'column', 
-                    alignItems: isEven ? 'flex-start' : 'flex-end',
-                    textAlign: isEven ? 'left' : 'right',
-                    gap: '6px' 
+                    alignItems: 'flex-start',
+                    textAlign: 'left',
+                    gap: '4px' 
                   }}>
                     {/* Nombre y Disponibilidad */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexDirection: isEven ? 'row' : 'row-reverse' }}>
-                      <span style={{ fontWeight: 800, fontSize: '22px', color: 'var(--color-text)', letterSpacing: '-0.4px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <span style={{ fontWeight: 800, fontSize: '18px', color: 'var(--color-text)', letterSpacing: '-0.3px' }}>
                         {worker.name}
                       </span>
                       <div 
-                        style={{ width: 10, height: 10, borderRadius: '50%', background: worker.available ? '#10B981' : '#EF4444' }} 
+                        style={{ width: 8, height: 8, borderRadius: '50%', background: worker.available ? '#10B981' : '#EF4444' }} 
                         title={worker.available ? 'Disponible' : 'Ocupado'}
                       />
                     </div>
@@ -793,47 +788,45 @@ export const SeekerDirectory: React.FC<SeekerDirectoryProps> = ({
                     <div style={{ 
                       display: 'flex', 
                       alignItems: 'center', 
-                      gap: '8px', 
-                      fontSize: '14px',
+                      gap: '6px', 
+                      fontSize: '13px',
                       color: 'var(--color-text-muted)',
-                      flexDirection: isEven ? 'row' : 'row-reverse',
                       marginTop: '2px'
                     }}>
-                      <Star size={14} fill="#FBBF24" color="#FBBF24" style={{ marginTop: '-2px' }} />
+                      <Star size={13} fill="#FBBF24" color="#FBBF24" style={{ marginTop: '-2px' }} />
                       <span style={{ fontWeight: 700, color: 'var(--color-text)' }}>{worker.rating.toFixed(1)}</span>
                       <span style={{ opacity: 0.4 }}>•</span>
                       <span>{formatDistance(worker.distanceKm || 0)}</span>
                     </div>
 
-                    {/* Precio destacado en etiqueta orgánica */}
-                    <div style={{
-                      marginTop: '8px',
-                      background: 'var(--color-surface)',
-                      border: `1.5px solid ${worker.avatarColor}`,
-                      color: worker.avatarColor,
-                      padding: '6px 14px',
-                      borderRadius: tagRadius,
-                      fontWeight: 800,
-                      fontSize: '15px',
-                      display: 'inline-block'
-                    }}>
-                      ${worker.hourlyRate.toLocaleString()}/h
+                    {/* ACCIÓN CONTEXTUAL (Aparece en hover) y PRECIO */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '8px' }}>
+                      <div style={{
+                        background: 'var(--color-surface)',
+                        border: `1.5px solid ${worker.avatarColor}`,
+                        color: worker.avatarColor,
+                        padding: '4px 10px',
+                        borderRadius: tagRadius,
+                        fontWeight: 800,
+                        fontSize: '13px',
+                        display: 'inline-block'
+                      }}>
+                        ${worker.hourlyRate.toLocaleString()}/h
+                      </div>
+                      
+                      <div className="seeker-worker-action hide-on-mobile" style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: '32px',
+                        height: '32px',
+                        borderRadius: '50%',
+                        background: 'var(--role-primary-light)',
+                        color: 'var(--role-primary)'
+                      }}>
+                        <ChevronRight size={18} />
+                      </div>
                     </div>
-                  </div>
-
-                  {/* ACCIÓN CONTEXTUAL (Aparece en hover) */}
-                  <div className="seeker-worker-action hide-on-mobile" style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '50%',
-                    background: 'var(--color-surface)',
-                    border: '1px solid var(--color-border)',
-                    color: 'var(--role-primary)'
-                  }}>
-                    <ChevronRight size={20} />
                   </div>
                 </div>
               );
