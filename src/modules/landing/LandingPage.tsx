@@ -221,11 +221,9 @@ export const LandingPage: React.FC<LandingPageProps> = ({ onEnterApp }) => {
         }}>
           <TrueFocus
             sentence="El talento de tu zona a un click de distancia"
-            manualMode={false}
             blurAmount={3}
             borderColor="#2F6BFF"
-            animationDuration={0.7}
-            pauseBetweenAnimations={1.8}
+            animationDuration={0.4}
           />
         </div>
 

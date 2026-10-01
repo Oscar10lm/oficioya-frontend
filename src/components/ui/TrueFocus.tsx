@@ -3,40 +3,28 @@ import { motion } from 'framer-motion';
 
 interface TrueFocusProps {
   sentence: string;
-  manualMode?: boolean;
   blurAmount?: number;
   borderColor?: string;
   animationDuration?: number;
-  pauseBetweenAnimations?: number;
 }
 
 export const TrueFocus: React.FC<TrueFocusProps> = ({
   sentence,
-  manualMode = false,
   blurAmount = 3,
   borderColor = '#2F6BFF',
-  animationDuration = 0.7,
-  pauseBetweenAnimations = 1.8
+  animationDuration = 0.5
 }) => {
   const words = sentence.split(' ');
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [focusRect, setFocusRect] = useState({ width: 0, height: 0, x: 0, y: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
   const wordRefs = useRef<(HTMLSpanElement | null)[]>([]);
 
   useEffect(() => {
-    if (manualMode) return;
-
-    const interval = setInterval(() => {
-      setCurrentIndex((prev) => (prev + 1) % words.length);
-    }, (animationDuration + pauseBetweenAnimations) * 1000);
-
-    return () => clearInterval(interval);
-  }, [manualMode, words.length, animationDuration, pauseBetweenAnimations]);
-
-  useEffect(() => {
     const updateFocusRect = () => {
-      const activeElement = wordRefs.current[currentIndex];
+      if (hoveredIndex === null) return;
+      
+      const activeElement = wordRefs.current[hoveredIndex];
       const container = containerRef.current;
       
       if (activeElement && container) {
@@ -55,38 +43,35 @@ export const TrueFocus: React.FC<TrueFocusProps> = ({
     updateFocusRect();
     window.addEventListener('resize', updateFocusRect);
     return () => window.removeEventListener('resize', updateFocusRect);
-  }, [currentIndex]);
-
-  const handleWordClick = (index: number) => {
-    if (manualMode) {
-      setCurrentIndex(index);
-    }
-  };
+  }, [hoveredIndex]);
 
   return (
     <div 
       ref={containerRef} 
+      onMouseLeave={() => setHoveredIndex(null)}
       style={{ 
         position: 'relative', 
         display: 'inline-flex', 
         flexWrap: 'wrap', 
         gap: '8px', 
         justifyContent: 'center',
-        padding: '12px'
+        padding: '12px',
+        cursor: 'default'
       }}
     >
       <motion.div
         initial={false}
         animate={{
-          width: focusRect.width + 16,
-          height: focusRect.height + 12,
-          x: focusRect.x - 8,
-          y: focusRect.y - 6
+          width: hoveredIndex !== null ? focusRect.width + 16 : 0,
+          height: hoveredIndex !== null ? focusRect.height + 12 : 0,
+          x: hoveredIndex !== null ? focusRect.x - 8 : focusRect.x,
+          y: hoveredIndex !== null ? focusRect.y - 6 : focusRect.y,
+          opacity: hoveredIndex !== null ? 1 : 0
         }}
         transition={{
           type: 'spring',
-          stiffness: 150,
-          damping: 20,
+          stiffness: 250,
+          damping: 25,
           mass: 0.8,
           duration: animationDuration
         }}
@@ -102,20 +87,21 @@ export const TrueFocus: React.FC<TrueFocusProps> = ({
       />
       
       {words.map((word, index) => {
-        const isFocused = index === currentIndex;
+        const isHovered = hoveredIndex === index;
+        const isAnyHovered = hoveredIndex !== null;
+        
         return (
           <motion.span
             key={index}
             ref={(el) => { wordRefs.current[index] = el; }}
-            onClick={() => handleWordClick(index)}
+            onMouseEnter={() => setHoveredIndex(index)}
             animate={{
-              filter: isFocused ? 'blur(0px)' : `blur(${blurAmount}px)`,
-              opacity: isFocused ? 1 : 0.6
+              filter: !isAnyHovered || isHovered ? 'blur(0px)' : `blur(${blurAmount}px)`,
+              opacity: !isAnyHovered || isHovered ? 1 : 0.6
             }}
             transition={{ duration: animationDuration }}
             style={{
               display: 'inline-block',
-              cursor: manualMode ? 'pointer' : 'default',
               position: 'relative',
               zIndex: 1,
               transition: 'color 0.3s ease'
